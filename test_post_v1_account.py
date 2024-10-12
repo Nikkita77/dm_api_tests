@@ -50,7 +50,8 @@ def test_post_v1_account():
     response = requests.put(f'http://5.63.153.31:5051/v1/account/{token}', headers=headers)
     print(response.status_code)
     print(response.text)
-    assert response.status_code == 200, f'Пользователь {login} не был активирован'
+    assert response.status_code == 200, 'Пользователь  не был активирован'
+
     # Авторизоваться
     json_data = {
         'login': login,
@@ -61,4 +62,6 @@ def test_post_v1_account():
     response = requests.post('http://5.63.153.31:5051/v1/account/login', json=json_data)
     print(response.status_code)
     print(response.text)
-    assert response.status_code == 200, f'Пользователь {login} не смог авторизоваться'
+    assert response.status_code == 200, 'Пользователь  не смог авторизоваться'
+
+
