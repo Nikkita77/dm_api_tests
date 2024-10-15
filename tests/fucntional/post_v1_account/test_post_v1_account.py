@@ -75,3 +75,4 @@ def get_activation_token_by_login(
             token = user_data['ConfirmationLinkUrl'].split('/')[-1]
     assert token is not None, f'Токен для пользователя {login} не был получен'
     return token
+
