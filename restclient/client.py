@@ -5,7 +5,7 @@ from requests import (
     JSONDecodeError,
 )
 import structlog
-
+import curlify
 
 class RestClient:
     def __init__(
@@ -65,7 +65,8 @@ class RestClient:
             data=kwargs.get('data')
         )
         rest_response = self.session.request(method=method, url=full_url, **kwargs)
-
+        curl = curlify.to_curl(rest_response.request)
+        print(curl)
         log.msg(
             event='Response',
             status_code=rest_response.status_code,
