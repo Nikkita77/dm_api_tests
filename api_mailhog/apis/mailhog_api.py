@@ -3,7 +3,7 @@ import requests
 from restclient.client import RestClient
 
 
-class MailHogApi(RestClient):
+class Mailhogapi(RestClient):
 
     def get_api_v2_messages(
             self,

@@ -52,12 +52,6 @@ class AccountApi(RestClient):
             'Content-Type': 'application/json',
         }
 
-        json_data = {
-            'login': 'string',
-            'password': 'string',
-            'email': 'string',
-        }
-
         response = requests.put(
             f'{self.host}/v1/account/email',
             headers=headers,
