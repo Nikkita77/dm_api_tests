@@ -1,7 +1,21 @@
 from json import loads
 
+from retrying import retry
+
 from services.api_mailhog import MailHogApi
 from services.dm_api_account import DMApiAccount
+
+
+def retry_if_result_none(
+        result
+):
+    """Return True if we should retry (in this case when result is None), False otherwise"""
+    return result is None
+
+
+@retry(stop_max_attempt_number=6)
+def stop_after_5_attempts():
+    print("Stopping after 6 attempts")
 
 
 class AccountHelper:
@@ -19,7 +33,7 @@ class AccountHelper:
             login: str,
             password: str,
             email: str
-            ):
+    ):
         json_data = {
             'login': login,
             'email': email,
@@ -41,7 +55,7 @@ class AccountHelper:
             login: str,
             password: str,
             remember_me: bool = True
-            ):
+    ):
         json_data = {
             'login': login,
             'password': password,
@@ -51,18 +65,18 @@ class AccountHelper:
         assert response.status_code == 200, 'Пользователь  не смог авторизоваться'
         return response
 
-
-    @staticmethod
+    @retry(retry_on_result=retry_if_result_none, stop_max_attempt_number=6)
     def get_activation_token_by_login(
+            self,
             login,
             response
     ):
         token = None
+        response = self.mailhog.mailhog_api.get_api_v2_messages()
         for item in response.json()['items']:
             user_data = loads(item['Content']['Body'])
             user_login = user_data['Login']
             if user_login == login:
                 print(user_login)
                 token = user_data['ConfirmationLinkUrl'].split('/')[-1]
-        assert token is not None, f'Токен для пользователя {login} не был получен'
         return token
