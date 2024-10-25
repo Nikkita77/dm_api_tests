@@ -31,7 +31,11 @@ class AccountHelper:
         self.dm_account_api = dm_account_api
         self.mailhog = mailhog
 
-    def auth_client(self, login: str, password: str):
+    def auth_client(
+            self,
+            login: str,
+            password: str
+            ):
         response = self.user_login(login=login, password=password)
         token = {
             "x-dm-auth-token": response.headers["x-dm-auth-token"]
@@ -68,16 +72,20 @@ class AccountHelper:
             self,
             login: str,
             password: str,
-            remember_me: bool = True
+            remember_me: bool = True,
+            validate_response=False,
+            validate_headers=False
     ):
         login_credentials = LoginCredentials(
             login=login,
             password=password,
-            rememberMe=remember_me,
+            rememberMe=remember_me
         )
-        response = self.dm_account_api.login_api.post_v1_account_login(login_credentilas=login_credentials)
-        assert response.headers["x-dm-auth-token"], "Токен для пользователя не был получен"
-        assert response.status_code == 200, 'Пользователь  не смог авторизоваться'
+        response = self.dm_account_api.login_api.post_v1_account_login(login_credentilas=login_credentials,
+                                                                       validate_response=validate_response)
+        if validate_headers:
+            assert response.headers["x-dm-auth-token"], "Токен для пользователя не был получен"
+            assert response.status_code == 200, 'Пользователь  не смог авторизоваться'
         return response
 
     @retry(retry_on_result=retry_if_result_none, stop_max_attempt_number=6)
