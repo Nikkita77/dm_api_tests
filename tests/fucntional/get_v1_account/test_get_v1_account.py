@@ -1,4 +1,14 @@
+from checkers.http_checkers import check_status_code_http
+
+
 def test_get_v1_account(
         auth_account_helper
-        ):
+):
     auth_account_helper.dm_account_api.account_api.get_v1_account()
+
+
+def test_get_v1_account_no_auth(
+        account_helper
+):
+    with check_status_code_http(401, "User must be authenticated"):
+        account_helper.dm_account_api.account_api.get_v1_account()

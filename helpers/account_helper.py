@@ -85,7 +85,6 @@ class AccountHelper:
                                                                        validate_response=validate_response)
         if validate_headers:
             assert response.headers["x-dm-auth-token"], "Токен для пользователя не был получен"
-            assert response.status_code == 200, 'Пользователь  не смог авторизоваться'
         return response
 
     @retry(retry_on_result=retry_if_result_none, stop_max_attempt_number=6)
