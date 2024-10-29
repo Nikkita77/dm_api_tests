@@ -1,5 +1,6 @@
 import requests
 
+
 from dm_api_account.models.registration import Registration
 from dm_api_account.models.user_envelope import UserEnvelope
 from restclient.client import RestClient
@@ -23,7 +24,9 @@ class AccountApi(RestClient):
 
     def get_v1_account(
             self,
-            **kwargs
+            validate_response=True,
+            **kwargs,
+
     ):
         """
         Get current user
@@ -33,6 +36,8 @@ class AccountApi(RestClient):
             path=f'/v1/account',
             **kwargs
         )
+        # if validate_response:
+        #     return UserDetailsEnvelope(**response.json())
         return response
 
     def put_v1_account_token(
